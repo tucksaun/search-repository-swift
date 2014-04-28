@@ -15,6 +15,12 @@
 		<elasticsearch.version>1.1.0</elasticsearch.version>
 	</properties>
 
+	<scm>
+        <connection>scm:git:https://gerrit.wikimedia.org/r/p/search/repository-swift</connection>
+        <developerConnection>scm:git:ssh://gerrit.wikimedia.org:29418/search/repository-swift</developerConnection>
+        <url>https://github.com/wikimedia/search-repository-swift</url>
+    </scm>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.elasticsearch</groupId>
