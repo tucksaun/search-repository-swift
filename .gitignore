@@ -3,3 +3,6 @@
 .settings/
 target/
 data/
+bin/
+pom.xml.releaseBackup
+release.properties
