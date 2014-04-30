@@ -6,6 +6,7 @@ In order to install the plugin, simply run: `bin/plugin -install com.github.demo
 |      Swift Plugin           | elasticsearch         | Release date |
 |-----------------------------|-----------------------|:------------:|
 | 0.1                         | 1.1.0                 | 2014-04-29   |
+| 0.2                         | 1.1.0                 | 2014-04-30   |
 
 ## Create Repository
 ```
