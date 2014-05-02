@@ -38,7 +38,7 @@ See [Snapshot And Restore](http://www.elasticsearch.org/guide/en/elasticsearch/r
 
 
 ## To debug in Eclipse
-Since Swift has loggin dependencies you have to be careful about debugging in Eclipse.
+Since Swift has logging dependencies you have to be careful about debugging in Eclipse.
 
 1.  Import this project into Eclipse using the maven connector.  Do no import the main Elasticsearch code.
 2.  Create a new java application debug configuration and set it to run ElasticsearchF.
