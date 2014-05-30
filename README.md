@@ -8,6 +8,7 @@ In order to install the plugin, simply run: `bin/plugin -install org.wikimedia.e
 | 0.1                         | 1.1.0                 | 2014-04-29   |
 | 0.2                         | 1.1.0                 | 2014-04-30   |
 | 0.3                         | 1.1.0                 | 2014-05-01   |
+| 0.4                         | 1.1.0                 | 2014-05-28   |
 
 ## Create Repository
 ```
