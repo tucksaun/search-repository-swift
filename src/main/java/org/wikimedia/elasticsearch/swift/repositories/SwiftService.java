@@ -42,11 +42,7 @@ public class SwiftService extends AbstractLifecycleComponent<SwiftService> {
 		}
 
 		try {
-			AccountConfig conf = new AccountConfig();
-			conf.setUsername(username);
-			conf.setPassword(password);
-			conf.setAuthUrl(url);
-			conf.setAuthenticationMethod(AuthenticationMethod.BASIC);
+			AccountConfig conf = getStandardConfig(url, username, password, AuthenticationMethod.BASIC);
 			swiftUser = new AccountFactory(conf).createAccount();
 		} catch (CommandException ce) {
 			throw new ElasticsearchIllegalArgumentException("Unable to authenticate to Swift Basic " + url + "/" + username + "/" + password, ce);
@@ -60,12 +56,8 @@ public class SwiftService extends AbstractLifecycleComponent<SwiftService> {
 		}
 
 		try {
-			AccountConfig conf = new AccountConfig();
-			conf.setUsername(username);
-			conf.setPassword(password);
-			conf.setAuthUrl(url);
+			AccountConfig conf = getStandardConfig(url, username, password, AuthenticationMethod.KEYSTONE);
 			conf.setTenantName(tenantName);
-			conf.setAuthenticationMethod(AuthenticationMethod.KEYSTONE);
 			swiftUser = new AccountFactory(conf).createAccount();
 		} catch (CommandException ce) {
 			throw new ElasticsearchIllegalArgumentException(
@@ -80,16 +72,21 @@ public class SwiftService extends AbstractLifecycleComponent<SwiftService> {
 		}
 
 		try {
-			AccountConfig conf = new AccountConfig();
-			conf.setUsername(username);
-			conf.setPassword(password);
-			conf.setAuthUrl(url);
-			conf.setAuthenticationMethod(AuthenticationMethod.TEMPAUTH);
+			AccountConfig conf = getStandardConfig(url, username, password, AuthenticationMethod.TEMPAUTH);
 			swiftUser = new AccountFactory(conf).createAccount();
 		} catch (CommandException ce) {
 			throw new ElasticsearchIllegalArgumentException("Unable to authenticate to Swift Temp", ce);
 		}
 		return swiftUser;
+	}
+
+	private AccountConfig getStandardConfig(String url, String username, String password, AuthenticationMethod method) {
+		AccountConfig conf = new AccountConfig();
+		conf.setAuthUrl(url);
+		conf.setUsername(username);
+		conf.setPassword(password);
+		conf.setAuthenticationMethod(method);
+		return conf;
 	}
 
 	/**
