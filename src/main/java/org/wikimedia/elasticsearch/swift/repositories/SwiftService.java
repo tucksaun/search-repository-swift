@@ -86,6 +86,7 @@ public class SwiftService extends AbstractLifecycleComponent<SwiftService> {
 		conf.setUsername(username);
 		conf.setPassword(password);
 		conf.setAuthenticationMethod(method);
+		conf.setAllowContainerCaching(false);
 		return conf;
 	}
 
