@@ -37,8 +37,9 @@ See [Snapshot And Restore](http://www.elasticsearch.org/guide/en/elasticsearch/r
 | swift_password                      | Swift password
 | swift_tenant                        | Swift tenant name, only used with keystone auth
 | swift_username                      | Swift username
-| concurrent_streams                  | Throttles the number of streams (per node) preforming snapshot operation. Defaults to `5`
-| compress                            | Turns on compression of the snapshot files. Defaults to `true`.
+| chunk_size                          | Maximum size for individual objects in the snapshot. Defaults to `5gb` as that's the Swift default
+| concurrent_streams                  | Throttles the number of streams (per node) performing snapshot operation. Defaults to `5`
+| compress                            | Turns on compression of the snapshot files. Defaults to `false` as it tends to break with Swift
 | max_restore_bytes_per_sec           | Throttles per node restore rate. Defaults to `20mb` per second.
 | max_snapshot_bytes_per_sec          | Throttles per node snapshot rate. Defaults to `20mb` per second.
 

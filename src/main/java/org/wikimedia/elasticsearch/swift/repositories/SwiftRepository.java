@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 import org.elasticsearch.common.blobstore.BlobPath;
 import org.elasticsearch.common.blobstore.BlobStore;
 import org.elasticsearch.common.inject.Inject;
+import org.elasticsearch.common.unit.ByteSizeUnit;
 import org.elasticsearch.common.unit.ByteSizeValue;
 import org.elasticsearch.common.util.concurrent.EsExecutors;
 import org.elasticsearch.index.snapshots.IndexShardRepository;
@@ -74,8 +75,9 @@ public class SwiftRepository extends BlobStoreRepository {
 
 		blobStore = new SwiftBlobStore(settings, account, container, concurrentStreamPool);
 
-		this.chunkSize = repositorySettings.settings().getAsBytesSize("chunk_size", componentSettings.getAsBytesSize("chunk_size", null));
-		this.compress = repositorySettings.settings().getAsBoolean("compress", componentSettings.getAsBoolean("compress", true));
+		this.chunkSize = repositorySettings.settings().getAsBytesSize("chunk_size",
+				componentSettings.getAsBytesSize("chunk_size", new ByteSizeValue(5, ByteSizeUnit.GB)));
+		this.compress = repositorySettings.settings().getAsBoolean("compress", componentSettings.getAsBoolean("compress", false));
 		this.basePath = BlobPath.cleanPath();
 	}
 
