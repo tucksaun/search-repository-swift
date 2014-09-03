@@ -1,8 +1,8 @@
 package org.wikimedia.elasticsearch.swift.repositories.blobstore;
 
+import org.elasticsearch.common.blobstore.BlobContainer;
 import org.elasticsearch.common.blobstore.BlobPath;
 import org.elasticsearch.common.blobstore.BlobStore;
-import org.elasticsearch.common.blobstore.ImmutableBlobContainer;
 import org.elasticsearch.common.component.AbstractComponent;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.unit.ByteSizeUnit;
@@ -11,15 +11,10 @@ import org.javaswift.joss.model.Account;
 import org.javaswift.joss.model.Container;
 import org.javaswift.joss.model.StoredObject;
 
-import java.util.concurrent.Executor;
-
 /**
  * Our blob store
  */
 public class SwiftBlobStore extends AbstractComponent implements BlobStore {
-	// Executor for our operations. Sorta like a dedicated Thread pool.
-    private final Executor executor;
-
     // How much to buffer our blobs by
     private final int bufferSizeInBytes;
 
@@ -31,11 +26,9 @@ public class SwiftBlobStore extends AbstractComponent implements BlobStore {
      * @param settings Settings for our repository. Only care about buffer size.
      * @param auth
      * @param container
-     * @param executor
      */
-    public SwiftBlobStore(Settings settings, Account auth, String container, Executor executor) {
+    public SwiftBlobStore(Settings settings, Account auth, String container) {
         super(settings);
-        this.executor = executor;
         this.bufferSizeInBytes = (int)settings.getAsBytesSize("buffer_size", new ByteSizeValue(100, ByteSizeUnit.KB)).bytes();
 
         swift = auth.getContainer(container);
@@ -53,13 +46,6 @@ public class SwiftBlobStore extends AbstractComponent implements BlobStore {
     }
 
     /**
-     * Get the executor
-     */
-    public Executor executor() {
-        return executor;
-    }
-
-    /**
      * Get our buffer size
      */
     public int bufferSizeInBytes() {
@@ -71,8 +57,8 @@ public class SwiftBlobStore extends AbstractComponent implements BlobStore {
      * @param path The blob path to search
      */
     @Override
-    public ImmutableBlobContainer immutableBlobContainer(BlobPath path) {
-        return new SwiftImmutableBlobContainer(path, this);
+    public BlobContainer blobContainer(BlobPath path) {
+        return new SwiftBlobContainer(path, this);
     }
 
     /**
@@ -81,7 +67,7 @@ public class SwiftBlobStore extends AbstractComponent implements BlobStore {
      */
     @Override
     public void delete(BlobPath path) {
-    	String keyPath = path.buildAsString("/");
+        String keyPath = path.buildAsString("/");
         if (!keyPath.isEmpty()) {
             keyPath = keyPath + "/";
         }

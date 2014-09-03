@@ -15,7 +15,7 @@ import java.util.Collection;
  * Our base plugin stuff.
  */
 public class SwiftRepositoryPlugin extends AbstractPlugin {
-	// Elasticsearch settings
+    // Elasticsearch settings
     private final Settings settings;
 
     /**
@@ -45,9 +45,9 @@ public class SwiftRepositoryPlugin extends AbstractPlugin {
     /**
      * Register our services, if needed.
      */
-	@Override
-	@SuppressWarnings("rawtypes")
-	public Collection<Class<? extends LifecycleComponent>> services() {
+    @Override
+    @SuppressWarnings("rawtypes")
+    public Collection<Class<? extends LifecycleComponent>> services() {
         Collection<Class<? extends LifecycleComponent>> services = Lists.newArrayList();
         if (settings.getAsBoolean("swift.repository.enabled", true)) {
             services.add(SwiftService.class);
@@ -55,10 +55,10 @@ public class SwiftRepositoryPlugin extends AbstractPlugin {
         return services;
     }
 
-	/**
-	 * Load our repository module into the list, if enabled
-	 * @param repositoriesModule The repositories module to register ourselves with
-	 */
+    /**
+     * Load our repository module into the list, if enabled
+     * @param repositoriesModule The repositories module to register ourselves with
+     */
     public void onModule(RepositoriesModule repositoriesModule) {
         if (settings.getAsBoolean("swift.repository.enabled", true)) {
             repositoriesModule.registerRepository(SwiftRepository.TYPE, SwiftRepositoryModule.class);

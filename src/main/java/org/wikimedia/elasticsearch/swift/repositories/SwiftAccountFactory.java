@@ -4,17 +4,17 @@ import org.javaswift.joss.model.Account;
 
 public class SwiftAccountFactory {
 
-	public static Account createAccount(SwiftService swiftService, String url, String username, String password, String tenantName, String authMethod) {
-		if ("KEYSTONE".equals(authMethod.toUpperCase())) {
-			return swiftService.swiftKeyStone(url, username, password, tenantName);
-		}
+    public static Account createAccount(SwiftService swiftService, String url, String username, String password, String tenantName, String authMethod) {
+        if ("KEYSTONE".equals(authMethod.toUpperCase())) {
+            return swiftService.swiftKeyStone(url, username, password, tenantName);
+        }
 
-		if ("TEMPAUTH".equals(authMethod.toUpperCase())) {
-			return swiftService.swiftTempAuth(url, username, password);
-		}
+        if ("TEMPAUTH".equals(authMethod.toUpperCase())) {
+            return swiftService.swiftTempAuth(url, username, password);
+        }
 
-		return swiftService.swiftBasic(url, username, password);
+        return swiftService.swiftBasic(url, username, password);
 
-	}
+    }
 
 }

@@ -9,13 +9,6 @@ import org.elasticsearch.repositories.Repository;
  * Swift repository module. Binds us to things.
  */
 public class SwiftRepositoryModule extends AbstractModule {
-	/**
-	 * Constructor. Super boring.
-	 */
-    public SwiftRepositoryModule() {
-        super();
-    }
-
     /**
      * Do the binding.
      */

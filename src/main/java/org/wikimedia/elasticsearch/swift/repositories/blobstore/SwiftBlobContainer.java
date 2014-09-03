@@ -10,15 +10,19 @@ import org.javaswift.joss.model.Directory;
 import org.javaswift.joss.model.DirectoryOrObject;
 import org.javaswift.joss.model.StoredObject;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.util.Collection;
 
 /**
  * Swift's implementation of the AbstractBlobContainer
  */
 public class SwiftBlobContainer extends AbstractBlobContainer {
-	// Our local swift blob store instance
+    // Our local swift blob store instance
     protected final SwiftBlobStore blobStore;
 
     // The root path for blobs. Used by buildKey to build full blob names
@@ -44,46 +48,7 @@ public class SwiftBlobContainer extends AbstractBlobContainer {
      */
     @Override
     public boolean blobExists(String blobName) {
-    	return blobStore.swift().getObject(buildKey(blobName)).exists();
-    }
-
-    /**
-     * Read a given blob into the listener
-     * @param blobName The blob name to read
-     * @param listener The listener to report our read info back to
-     */
-    @Override
-    public void readBlob(final String blobName, final ReadBlobListener listener) {
-        blobStore.executor().execute(new Runnable() {
-            @Override
-            public void run() {
-                InputStream is;
-                try {
-                	// This is the interesting bit. Fetch the blob and then turn it
-                	// into an InputStream for reading below
-                    StoredObject object = blobStore.swift().getObject(buildKey(blobName));
-                    is = object.downloadObjectAsInputStream();
-                } catch (Exception e) {
-                    listener.onFailure(e);
-                    return;
-                }
-                byte[] buffer = new byte[blobStore.bufferSizeInBytes()];
-                try {
-                    int bytesRead;
-                    while ((bytesRead = is.read(buffer)) != -1) {
-                        listener.onPartial(buffer, 0, bytesRead);
-                    }
-                    listener.onCompleted();
-                } catch (Exception e) {
-                    try {
-                        is.close();
-                    } catch (IOException e1) {
-                        // ignore
-                    }
-                    listener.onFailure(e);
-                }
-            }
-        });
+        return blobStore.swift().getObject(buildKey(blobName)).exists();
     }
 
     /**
@@ -92,10 +57,10 @@ public class SwiftBlobContainer extends AbstractBlobContainer {
      */
     @Override
     public boolean deleteBlob(String blobName) throws IOException {
-    	StoredObject object = blobStore.swift().getObject(buildKey(blobName));
-    	if (object.exists()) {
-    		object.delete();
-    	}
+        StoredObject object = blobStore.swift().getObject(buildKey(blobName));
+        if (object.exists()) {
+            object.delete();
+        }
         return true;
     }
 
@@ -139,5 +104,45 @@ public class SwiftBlobContainer extends AbstractBlobContainer {
      */
     protected String buildKey(String blobName) {
         return keyPath + blobName;
+    }
+
+    /**
+     * Fetch a given blob into a BufferedInputStream
+     * @param blobName The blob name to read
+     */
+    @Override
+    public InputStream openInput(String blobName) throws IOException {
+        return new BufferedInputStream(
+            blobStore.swift().getObject(buildKey(blobName)).downloadObjectAsInputStream(),
+                blobStore.bufferSizeInBytes());
+    }
+
+    @Override
+    public OutputStream createOutput(final String blobName) throws IOException {
+       // need to remove old file if already exist
+       deleteBlob(blobName);
+
+       final PipedInputStream in = new PipedInputStream();
+
+       // We'll need to store this thread and make sure it terminates when the output stream is closed.
+       final Thread transport = new Thread(new Runnable(){
+          public void run(){
+              blobStore.swift().getObject(buildKey(blobName)).uploadObject(in);
+          }
+       });
+       transport.start();
+
+       return new PipedOutputStream(in) {
+           @Override
+           public void close() throws IOException {
+               try {
+                   // Close output, close the thread
+                   super.close();
+                   transport.join();
+               } catch(InterruptedException e) {
+                   throw new IOException("Swift input/output shenanigans.", e);
+               }
+           }
+       };
     }
 }
