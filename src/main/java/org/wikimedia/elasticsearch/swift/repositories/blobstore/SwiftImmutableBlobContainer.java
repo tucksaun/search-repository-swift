@@ -11,7 +11,7 @@ import org.javaswift.joss.model.StoredObject;
 /**
  * The final implementation of Swift blob storage. Implements the write functionality
  */
-public class SwiftImmutableBlobContainer extends AbstractSwiftBlobContainer implements ImmutableBlobContainer {
+public class SwiftImmutableBlobContainer extends SwiftBlobContainer implements ImmutableBlobContainer {
 	/**
 	 * Constructor. Just call the parent.
      * @param path The BlobPath to find blobs in

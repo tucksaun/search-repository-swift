@@ -17,7 +17,7 @@ import java.util.Collection;
 /**
  * Swift's implementation of the AbstractBlobContainer
  */
-public class AbstractSwiftBlobContainer extends AbstractBlobContainer {
+public class SwiftBlobContainer extends AbstractBlobContainer {
 	// Our local swift blob store instance
     protected final SwiftBlobStore blobStore;
 
@@ -29,7 +29,7 @@ public class AbstractSwiftBlobContainer extends AbstractBlobContainer {
      * @param path The BlobPath to find blobs in
      * @param blobStore The blob store to use for operations
      */
-    protected AbstractSwiftBlobContainer(BlobPath path, SwiftBlobStore blobStore) {
+    protected SwiftBlobContainer(BlobPath path, SwiftBlobStore blobStore) {
         super(path);
         this.blobStore = blobStore;
         String keyPath = path.buildAsString("/");
