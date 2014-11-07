@@ -5,12 +5,13 @@ In order to install the plugin, simply run: `bin/plugin -install org.wikimedia.e
 
 |      Swift Plugin           | elasticsearch         | Release date |
 |-----------------------------|-----------------------|:------------:|
-| 0.1                         | 1.1.0                 | 2014-04-29   |
-| 0.2                         | 1.1.0                 | 2014-04-30   |
-| 0.3                         | 1.1.0                 | 2014-05-01   |
 | 0.4                         | 1.1.0                 | 2014-05-28   |
-| 0.5                         | 1.3.2                 | 2014-08-18   |
 | 0.6                         | 1.3.2                 | 2014-08-20   |
+| 0.7                         | 1.4.0                 | 2014-11-07   |
+| 0.8-SNAPSHOT                | master                |              |
+
+Versions 0.4, 0.6 and 0.7 should be used. The in-between releases were
+buggy and are not recommended.
 
 ## Create Repository
 ```
@@ -38,7 +39,6 @@ See [Snapshot And Restore](http://www.elasticsearch.org/guide/en/elasticsearch/r
 | swift_tenant                        | Swift tenant name, only used with keystone auth
 | swift_username                      | Swift username
 | chunk_size                          | Maximum size for individual objects in the snapshot. Defaults to `5gb` as that's the Swift default
-| concurrent_streams                  | Throttles the number of streams (per node) performing snapshot operation. Defaults to `5`
 | compress                            | Turns on compression of the snapshot files. Defaults to `false` as it tends to break with Swift
 | max_restore_bytes_per_sec           | Throttles per node restore rate. Defaults to `20mb` per second.
 | max_snapshot_bytes_per_sec          | Throttles per node snapshot rate. Defaults to `20mb` per second.
