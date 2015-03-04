@@ -17,7 +17,7 @@ public class SwiftService extends AbstractLifecycleComponent<SwiftService> {
 
     /**
      * Constructor
-     * 
+     *
      * @param settings
      *            Settings for our repository. Injected.
      */
@@ -28,7 +28,7 @@ public class SwiftService extends AbstractLifecycleComponent<SwiftService> {
 
     /**
      * Create a Swift account object and connect it to Swift
-     * 
+     *
      * @param url
      *            The auth url (eg: localhost:8080/auth/v1.0/)
      * @param username
@@ -50,14 +50,18 @@ public class SwiftService extends AbstractLifecycleComponent<SwiftService> {
         return swiftUser;
     }
 
-    public synchronized Account swiftKeyStone(String url, String username, String password, String tenantName) {
+    public synchronized Account swiftKeyStone(String url, String username, String password, String tenantName, String tenantId) {
         if (swiftUser != null) {
             return swiftUser;
         }
 
         try {
             AccountConfig conf = getStandardConfig(url, username, password, AuthenticationMethod.KEYSTONE);
-            conf.setTenantName(tenantName);
+            if (tenantName != "") {
+                conf.setTenantName(tenantName);
+            } else if (tenantId != "") {
+                conf.setTenantId(tenantId);
+            }
             swiftUser = new AccountFactory(conf).createAccount();
         } catch (CommandException ce) {
             throw new ElasticsearchIllegalArgumentException(

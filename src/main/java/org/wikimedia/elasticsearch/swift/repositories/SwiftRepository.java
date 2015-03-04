@@ -34,7 +34,7 @@ public class SwiftRepository extends BlobStoreRepository {
 
     /**
      * Constructs new BlobStoreRepository
-     * 
+     *
      * @param name
      *            repository name
      * @param repositorySettings
@@ -61,8 +61,9 @@ public class SwiftRepository extends BlobStoreRepository {
         String username = repositorySettings.settings().get("swift_username", "");
         String password = repositorySettings.settings().get("swift_password", "");
         String tenantName = repositorySettings.settings().get("swift_tenantname", "");
+        String tenantId = repositorySettings.settings().get("swift_tenantid", "");
         String authMethod = repositorySettings.settings().get("swift_authmethod", "");
-        Account account = SwiftAccountFactory.createAccount(swiftService, url, username, password, tenantName, authMethod);
+        Account account = SwiftAccountFactory.createAccount(swiftService, url, username, password, tenantName, tenantId, authMethod);
 
         blobStore = new SwiftBlobStore(settings, account, container);
 
